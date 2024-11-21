@@ -182,3 +182,48 @@ Detecta y clasifica objetos en tiempo real utilizando la cámara, combinando YOL
 Una ventana que muestra el video en tiempo real con los objetos detectados y clasificados.
 
 ---
+
+**Archivos de Configuración de YOLO**
+------------------------------------
+
+Los archivos `yolov3.cfg` y `coco.names` son parte del framework YOLO (You Only Look Once), que se utiliza para la detección de objetos en las imágenes.
+
+### `yolov3.cfg`
+
+Este archivo contiene la configuración del modelo YOLOv3. Especifica detalles como el tamaño de la imagen de entrada, la cantidad de capas, los parámetros de optimización, etc. Este archivo es necesario para cargar el modelo en tiempo de ejecución.
+
+```markdown
+# Configuración del modelo YOLOv3
+yolov3.cfg
+```
+
+### `coco.names`
+
+Este archivo contiene una lista de nombres de las clases que el modelo YOLOv3 puede clasificar. En tu caso, las categorías de arte incluyen: Pintura, Escultura, Fotografía, Grabado, Dibujo. Este archivo es necesario para mapear las salidas del modelo a las clases correspondientes.
+
+```markdown
+# Lista de nombres de clases
+coco.names
+```
+
+**Estructura del Proyecto**
+---------------------------
+
+A continuación, se muestra la estructura del proyecto con los archivos `yolov3.cfg` y `coco.names` incluidos:
+
+```markdown
+proyecto/
+├── datos/
+│   ├── imagenes_originales/
+│   └── imagenes_procesadas/
+├── modelos/
+├── resultados/
+├── src/
+│   ├── preprocesamiento.py
+│   ├── entrenamiento.py
+│   └── clasificacion_tiempo_real.py
+├── requirements.txt
+├── yolov3.cfg
+├── yolov3.weights
+└── coco.names
+```
