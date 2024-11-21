@@ -1,229 +1,287 @@
-# Clasificación de Arte en Tiempo Real
+---
 
-Bienvenido a nuestra aplicación de clasificación de arte en tiempo real. Esta aplicación utiliza técnicas de aprendizaje automático para clasificar imágenes de arte en diferentes categorías.
+# 🎨 Clasificación de Arte en Tiempo Real con IA
 
-## Requisitos
+Este proyecto combina técnicas avanzadas de aprendizaje profundo con un sistema en tiempo real para clasificar imágenes de arte en categorías como pintura, escultura, fotografía, grabado y dibujo.
 
-* Python 3.x instalado en tu sistema
-* Dependencias necesarias instaladas utilizando el archivo `requirements.txt`
-* Un conjunto de imágenes de arte para entrenar y probar el modelo
+---
 
-## Preparación del entorno
+## 📚 **Contenido**
 
-1. Instala las dependencias necesarias utilizando el archivo `requirements.txt`:
-   ```
-   pip install -r requirements.txt
-   ```
+- [📚 **Contenido**](#-contenido)
+- [📋 **Requisitos**](#-requisitos)
+- [📂 **Estructura del Proyecto**](#-estructura-del-proyecto)
+- [🚀 **Guía Rápida**](#-guía-rápida)
+- [🔍 **Detalles del Código**](#-detalles-del-código)
+  - [**1. Preprocesamiento (`src/preprocesamiento.py`)**](#1-preprocesamiento-srcpreprocesamientopy)
+    - [**Funcionamiento**:](#funcionamiento)
+  - [**2. Entrenamiento (`src/entrenamiento.py`)**](#2-entrenamiento-srcentrenamientopy)
+    - [**Funcionamiento**:](#funcionamiento-1)
+  - [**3. Clasificación en Tiempo Real (`src/clasificacion_tiempo_real.py`)**](#3-clasificación-en-tiempo-real-srcclasificacion_tiempo_realpy)
+    - [**Funcionamiento**:](#funcionamiento-2)
+- [📊 **Modelo y Técnicas Utilizadas**](#-modelo-y-técnicas-utilizadas)
+  - [**1. ResNet50**](#1-resnet50)
+  - [**2. YOLOv3**](#2-yolov3)
+  - [**3. Aumentos de Datos**](#3-aumentos-de-datos)
+  - [**4. Entrenamiento Transferido**](#4-entrenamiento-transferido)
+- [Con esta combinación, el sistema logra una detección y clasificación eficiente, robusta y precisa, ideal para aplicaciones en tiempo real. 🎨](#con-esta-combinación-el-sistema-logra-una-detección-y-clasificación-eficiente-robusta-y-precisa-ideal-para-aplicaciones-en-tiempo-real-)
+- [🤝 **Contribuciones**](#-contribuciones)
+- [📜 **Licencia**](#-licencia)
+  - [¡Explora, aprende y crea con este proyecto de clasificación de arte en tiempo real! 🎨](#explora-aprende-y-crea-con-este-proyecto-de-clasificación-de-arte-en-tiempo-real-)
 
-2. Asegúrate de tener Python 3.x instalado en tu sistema.
+---
 
-## Preprocesamiento de imágenes
+## 📋 **Requisitos**
 
-1. Ejecuta el script `src/preprocesamiento.py` para organizar y redimensionar las imágenes:
-   ```
+- **Python 3.x**
+- Instalar dependencias:
+  ```bash
+  pip install -r requirements.txt
+  ```
+- Archivos necesarios:
+  - `yolov3.cfg`, `yolov3.weights`, `coco.names`  
+    (estos se utilizan para la detección de objetos en tiempo real).
+
+---
+
+## 📂 **Estructura del Proyecto**
+
+```plaintext
+proyecto/
+├── datos/
+│   ├── imagenes_originales/       # Imágenes sin procesar
+│   └── imagenes_procesadas/       # Imágenes listas para entrenar
+├── modelos/                       # Modelos entrenados
+├── resultados/                    # Gráficos y reportes
+├── src/                           # Código fuente
+│   ├── preprocesamiento.py        # Preprocesamiento de imágenes
+│   ├── entrenamiento.py           # Entrenamiento del modelo
+│   └── clasificacion_tiempo_real.py # Clasificación en tiempo real
+├── requirements.txt               # Dependencias
+├── yolov3.cfg                     # Configuración de YOLOv3
+├── yolov3.weights                 # Pesos preentrenados de YOLOv3
+└── coco.names                     # Nombres de clases YOLO
+```
+
+---
+
+## 🚀 **Guía Rápida**
+
+1. **Preprocesamiento**: Prepara las imágenes para el entrenamiento.
+   ```bash
    python src/preprocesamiento.py
    ```
 
-   Este script organizará tus imágenes en carpetas de entrenamiento y validación, y las redimensionará al tamaño adecuado.
-
-## Entrenamiento del modelo
-
-1. Ejecuta el script `src/entrenamiento.py` para entrenar el modelo de clasificación:
-   ```
+2. **Entrenamiento**: Entrena el modelo con tus datos.
+   ```bash
    python src/entrenamiento.py
    ```
 
-   Este proceso puede llevar tiempo dependiendo de la cantidad de imágenes y la potencia de tu computadora.
-
-## Clasificación en tiempo real
-
-1. Ejecuta el script `src/clasificacion_tiempo_real.py` para clasificar imágenes en tiempo real:
-   ```
+3. **Clasificación en Tiempo Real**: Clasifica imágenes usando tu cámara.
+   ```bash
    python src/clasificacion_tiempo_real.py
    ```
 
-   Asegúrate de tener una cámara web conectada a tu computadora.
+---
 
-## Consideraciones adicionales
+## 🔍 **Detalles del Código**
 
-* Asegúrate de que la estructura de directorios sea correcta:
-  ```
-  proyecto/
-  ├── datos/
-  │   ├── imagenes_originales/
-  │   └── imagenes_procesadas/
-  ├── modelos/
-  ├── resultados/
-  ├── src/
-  │   ├── preprocesamiento.py
-  │   ├── entrenamiento.py
-  │   └── clasificacion_tiempo_real.py
-  ├── requirements.txt
-  ├── yolov3.cfg
-  ├── yolov3.weights
-  └── coco.names
-  ```
+### **1. Preprocesamiento (`src/preprocesamiento.py`)**
 
-  * Si encuentras problemas con la detección de objetos, verifica que los archivos `yolov3.cfg`, `yolov3.weights` y `coco.names` estén en el directorio correcto y sean accesibles por el script.
+Este script organiza y prepara las imágenes para el modelo.  
 
-## Modelo utilizado
+#### **Funcionamiento**:
 
-El modelo utilizado es un ResNet50 pre-entrenado en ImageNet, con una capa adicional de clasificación para las categorías de arte.
+1. **Organización de Imágenes**:
+   - Divide las imágenes originales en carpetas `train` y `val` (80%-20%).
+   - Crea subcarpetas por categoría en cada división.
 
-## Categorías de arte
+   ```python
+   def organizar_imagenes(directorio_origen, directorio_destino):
+       categorias = [d for d in os.listdir(directorio_origen) if os.path.isdir(os.path.join(directorio_origen, d))]
+       for categoria in categorias:
+           # Crear carpetas para entrenamiento y validación
+           os.makedirs(os.path.join(directorio_destino, 'train', categoria), exist_ok=True)
+           os.makedirs(os.path.join(directorio_destino, 'val', categoria), exist_ok=True)
+   ```
 
-Las categorías de arte utilizadas en este proyecto son:
-+ Pintura
-+ Escultura
-+ Fotografía
-+ Grabado
-+ Dibujo
+2. **Redimensionamiento de Imágenes**:
+   - Cambia el tamaño de las imágenes a `(224, 224)` para que sean compatibles con ResNet50.
+   ```python
+   def redimensionar_imagenes(directorio, tamaño=(224, 224)):
+       for root, _, files in os.walk(directorio):
+           for file in files:
+               with Image.open(ruta_imagen) as img:
+                   img_redimensionada = img.resize(tamaño, Image.LANCZOS)
+                   img_redimensionada.save(ruta_imagen)
+   ```
 
-## Ejemplo de uso
-
-Para clasificar una imagen en tiempo real, ejecuta el script `src/clasificacion_tiempo_real.py` y apunta la cámara web a la imagen que deseas clasificar.
-
-## Explicacion del codigo
-
-Aquí tienes la explicación detallada de cada uno de los archivos de tu proyecto, en formato Markdown para que lo uses directamente en un archivo `README.md` de GitHub.
+3. **Resultado**:
+   - Estructura de directorios:
+     ```plaintext
+     datos/imagenes_procesadas/
+     ├── train/
+     │   ├── pintura/
+     │   ├── escultura/
+     └── val/
+         ├── pintura/
+         ├── escultura/
+     ```
 
 ---
 
-# Proyecto: Clasificación de Arte con IA
+### **2. Entrenamiento (`src/entrenamiento.py`)**
 
-Este repositorio contiene el código para un sistema de clasificación de imágenes de arte utilizando aprendizaje profundo. El proyecto incluye tres componentes principales:
+Este script entrena un modelo basado en ResNet50.
 
-1. **Preprocesamiento de datos** (`preprocesamiento.py`).
-2. **Entrenamiento del modelo** (`entrenamiento.py`).
-3. **Clasificación en tiempo real** (`clasificacion_tiempo_real.py`).
+#### **Funcionamiento**:
 
-A continuación, se describe el propósito y funcionamiento de cada script.
+1. **Carga de Datos**:
+   - Utiliza `ImageDataGenerator` para aplicar aumentos de datos.
+   ```python
+   train_datagen = ImageDataGenerator(
+       rescale=1./255,
+       rotation_range=20,
+       width_shift_range=0.2,
+       height_shift_range=0.2,
+       horizontal_flip=True)
+   ```
 
----
+2. **Definición del Modelo**:
+   - ResNet50 preentrenado, con capas densas para clasificación:
+   ```python
+   model = tf.keras.Sequential([
+       ResNet50(weights='imagenet', include_top=False, input_shape=(224, 224, 3)),
+       tf.keras.layers.GlobalAveragePooling2D(),
+       tf.keras.layers.Dense(1024, activation='relu'),
+       tf.keras.layers.Dropout(0.5),
+       tf.keras.layers.Dense(num_classes, activation='softmax')
+   ])
+   ```
 
-## **1. Preprocesamiento de datos (`preprocesamiento.py`)**
+3. **Entrenamiento**:
+   - El modelo se entrena durante 20 épocas y se guarda como `modelo_clasificacion_arte.h5`.
+   - Resultados guardados como gráficos de precisión y pérdida en `resultados/`.
 
-### Propósito
-Prepara las imágenes originales para el entrenamiento del modelo, organizándolas en carpetas de entrenamiento y validación, y ajustando su tamaño.
-
-### Explicación del código
-- **`organizar_imagenes(directorio_origen, directorio_destino)`**  
-  - Toma imágenes desde `directorio_origen`.
-  - Crea subcarpetas para entrenamiento (`train`) y validación (`val`) dentro de `directorio_destino`.
-  - Divide las imágenes en un 80% para entrenamiento y 20% para validación.
-  - Copia las imágenes a las carpetas correspondientes.
-
-- **`redimensionar_imagenes(directorio, tamaño=(224, 224))`**  
-  - Ajusta el tamaño de las imágenes en el directorio al especificado, utilizando una interpolación de alta calidad.
-
-- **Ejecución del script**  
-  El script ejecuta las funciones anteriores en las rutas de origen y destino configuradas:
-  ```python
-  directorio_origen = "datos/imagenes_originales"
-  directorio_destino = "datos/imagenes_procesadas"
-  ```
-
-### Resultado
-Genera dos carpetas en `datos/imagenes_procesadas`: `train` y `val`, con imágenes redimensionadas y listas para el entrenamiento.
-
----
-
-## **2. Entrenamiento del modelo (`entrenamiento.py`)**
-
-### Propósito
-Entrena un modelo de aprendizaje profundo basado en ResNet50 para clasificar imágenes de arte en diferentes categorías.
-
-### Explicación del código
-- **Preprocesamiento de datos**  
-  - Utiliza `ImageDataGenerator` para aplicar aumentos de datos (rotación, desplazamiento, espejado) y escalar valores de píxeles.
-  - Configura generadores para carpetas de entrenamiento (`train`) y validación (`val`).
-
-- **Definición del modelo**  
-  - Utiliza ResNet50 preentrenado como base (pesos de `imagenet`).
-  - Agrega capas densas, de agrupamiento global y de regularización (`Dropout`) para mejorar el rendimiento.
-
-- **Entrenamiento del modelo**  
-  - Configura una tasa de aprendizaje inicial (`0.0001`) y entrena el modelo por 20 épocas.
-  - Guarda el modelo entrenado como `modelos/modelo_clasificacion_arte.h5`.
-
-- **Visualización de resultados**  
-  - Genera gráficos de precisión y pérdida del entrenamiento y validación.
-  - Guarda los gráficos en `resultados/resultados_entrenamiento.png`.
-
-### Resultado
-Obtendrás un modelo entrenado y gráficos que muestran el rendimiento durante el entrenamiento.
+4. **Visualización**:
+   ```python
+   plt.plot(history.history['accuracy'], label='Entrenamiento')
+   plt.plot(history.history['val_accuracy'], label='Validación')
+   ```
 
 ---
 
-## **3. Clasificación en tiempo real (`clasificacion_tiempo_real.py`)**
+### **3. Clasificación en Tiempo Real (`src/clasificacion_tiempo_real.py`)**
 
-### Propósito
-Detecta y clasifica objetos en tiempo real utilizando la cámara, combinando YOLO para la detección y un modelo de clasificación para la predicción.
+Este script utiliza YOLO para detectar regiones en imágenes y un modelo entrenado para clasificarlas.
 
-### Explicación del código
-- **Cargar recursos**  
-  - Carga el modelo entrenado desde `modelos/modelo_clasificacion_arte.h5`.
-  - Obtiene las clases desde la carpeta `datos/imagenes_procesadas/train`.
-  - Configura YOLO para detección de objetos.
+#### **Funcionamiento**:
 
-- **Captura de video**  
-  - Inicializa la cámara para procesar fotogramas en tiempo real.
+1. **Carga de Recursos**:
+   - Modelo preentrenado y archivos YOLO (`yolov3.cfg`, `yolov3.weights`).
+   ```python
+   model = tf.keras.models.load_model('modelos/modelo_clasificacion_arte.h5')
+   net = cv2.dnn.readNet('yolov3.weights', 'yolov3.cfg')
+   ```
 
-- **Detección y clasificación**  
-  - Utiliza YOLO para detectar objetos y extraer las regiones correspondientes.
-  - Clasifica cada objeto detectado utilizando el modelo entrenado.
-  - Muestra en pantalla el nombre de la clase predicha y la confianza.
+2. **Detección de Objetos**:
+   - Utiliza YOLO para identificar regiones relevantes.
+   ```python
+   blob = cv2.dnn.blobFromImage(frame, 0.00392, (416, 416), (0, 0, 0), True, crop=False)
+   net.setInput(blob)
+   outputs = net.forward(output_layers)
+   ```
 
-- **Interfaz en tiempo real**  
-  - Muestra la imagen procesada en una ventana.
-  - Cierra la ventana si se presiona la tecla `q`.
+3. **Clasificación**:
+   - Clasifica cada región detectada utilizando el modelo entrenado.
+   ```python
+   img = cv2.resize(roi, (224, 224))
+   img = np.expand_dims(img, 0)
+   prediccion = model.predict(img)
+   ```
 
-### Resultado
-Una ventana que muestra el video en tiempo real con los objetos detectados y clasificados.
+4. **Interfaz Visual**:
+   - Muestra los resultados en tiempo real, incluyendo la clase y la confianza.
+   ```python
+   cv2.putText(frame, f"{clase_predicha} ({confianza:.2f})", (x, y - 10), ...)
+   ```
+
+---
+¡Claro! Aquí tienes una explicación más detallada de la sección **Modelo y Técnicas Utilizadas**:
 
 ---
 
-**Archivos de Configuración de YOLO**
-------------------------------------
+## 📊 **Modelo y Técnicas Utilizadas**
 
-Los archivos `yolov3.cfg` y `coco.names` son parte del framework YOLO (You Only Look Once), que se utiliza para la detección de objetos en las imágenes.
+### **1. ResNet50**  
+**ResNet50** (Residual Network con 50 capas) es una arquitectura de red neuronal convolucional ampliamente utilizada para tareas de clasificación de imágenes. Es conocida por abordar el problema del "degradado" en redes profundas mediante el uso de conexiones residuales (skip connections).  
+- **Por qué ResNet50**:  
+  - Ofrece un balance ideal entre precisión y eficiencia computacional.  
+  - Al estar preentrenada en el conjunto de datos **ImageNet**, proporciona un buen punto de partida para la clasificación de imágenes artísticas.  
+- **Implementación**:  
+  - Se usa ResNet50 como extractor de características.  
+  - Las capas finales de clasificación se reemplazan por:
+    - Una capa de promedio global (`GlobalAveragePooling2D`) para reducir dimensionalidad.  
+    - Una capa densa con 1024 neuronas y activación `relu`.  
+    - Una capa de salida con activación `softmax` para categorizar entre las clases de arte.  
+- **Ventaja**:  
+  - Reduce el tiempo de entrenamiento y mejora la precisión en tareas especializadas al utilizar un modelo preentrenado.
 
-### `yolov3.cfg`
+---
 
-Este archivo contiene la configuración del modelo YOLOv3. Especifica detalles como el tamaño de la imagen de entrada, la cantidad de capas, los parámetros de optimización, etc. Este archivo es necesario para cargar el modelo en tiempo de ejecución.
+### **2. YOLOv3**  
+**YOLOv3** (You Only Look Once, versión 3) es un modelo de detección de objetos en tiempo real. Es rápido y preciso, diseñado para detectar múltiples objetos en una sola pasada de la imagen.  
+- **Rol en el proyecto**:  
+  - Identificar regiones de interés (ROIs) en las imágenes en tiempo real (por ejemplo, esculturas en una habitación o cuadros en una pared).  
+  - Las regiones detectadas son enviadas al modelo de clasificación (ResNet50) para su categorización.  
+- **Características principales de YOLOv3**:  
+  - Divide la imagen en una cuadrícula y predice cajas delimitadoras junto con probabilidades para cada celda.  
+  - Compatible con detección de objetos a múltiples escalas.  
+- **Ventaja**:  
+  - Detecta regiones relevantes en la imagen de forma eficiente, permitiendo clasificar solo las áreas relevantes en lugar de analizar toda la imagen.  
 
-```markdown
-# Configuración del modelo YOLOv3
-yolov3.cfg
-```
+---
 
-### `coco.names`
+### **3. Aumentos de Datos**  
+Los **aumentos de datos** son técnicas que generan versiones modificadas de las imágenes originales para incrementar el tamaño y la diversidad del conjunto de datos de entrenamiento. Esto ayuda a reducir el sobreajuste y mejora la capacidad generalizadora del modelo.  
+- **Técnicas utilizadas**:  
+  - **Rotación**: Rotaciones aleatorias dentro de un rango definido.  
+  - **Traslación**: Cambios en la posición horizontal y vertical.  
+  - **Escalado**: Ajustes de tamaño que simulan acercamientos o alejamientos.  
+  - **Volteo horizontal**: Reflejar imágenes para añadir simetría.  
+- **Ventaja**:  
+  - Simula escenarios reales y mejora la robustez del modelo frente a variaciones en los datos.
 
-Este archivo contiene una lista de nombres de las clases que el modelo YOLOv3 puede clasificar. En tu caso, las categorías de arte incluyen: Pintura, Escultura, Fotografía, Grabado, Dibujo. Este archivo es necesario para mapear las salidas del modelo a las clases correspondientes.
+---
 
-```markdown
-# Lista de nombres de clases
-coco.names
-```
+### **4. Entrenamiento Transferido**  
+El **entrenamiento transferido** utiliza un modelo preentrenado como base, reutilizando las características aprendidas en un conjunto de datos general (por ejemplo, **ImageNet**) para resolver un problema específico (clasificación de arte).  
+- **Implementación en este proyecto**:  
+  - La parte convolucional de ResNet50 (capas convolucionales y conexiones residuales) se congela inicialmente para mantener las características generales.  
+  - Solo las capas superiores (capa densa y softmax) se entrenan con datos de arte.  
+  - En etapas avanzadas, se ajustan las capas profundas (fine-tuning) para optimizar la clasificación de imágenes artísticas.  
+- **Ventaja**:  
+  - Reduce drásticamente los tiempos de entrenamiento.  
+  - Aprovecha características preaprendidas, mejorando la precisión, especialmente cuando los datos disponibles son limitados.
 
-**Estructura del Proyecto**
----------------------------
+---
 
-A continuación, se muestra la estructura del proyecto con los archivos `yolov3.cfg` y `coco.names` incluidos:
+Con esta combinación, el sistema logra una detección y clasificación eficiente, robusta y precisa, ideal para aplicaciones en tiempo real. 🎨
+---
 
-```markdown
-proyecto/
-├── datos/
-│   ├── imagenes_originales/
-│   └── imagenes_procesadas/
-├── modelos/
-├── resultados/
-├── src/
-│   ├── preprocesamiento.py
-│   ├── entrenamiento.py
-│   └── clasificacion_tiempo_real.py
-├── requirements.txt
-├── yolov3.cfg
-├── yolov3.weights
-└── coco.names
-```
+## 🤝 **Contribuciones**
+
+¡Todas las contribuciones son bienvenidas! Puedes:
+- Reportar problemas.
+- Mejorar la documentación.
+- Proponer nuevas características.
+
+---
+
+## 📜 **Licencia**
+
+Este proyecto está licenciado bajo la [MIT License](LICENSE).
+
+--- 
+
+### ¡Explora, aprende y crea con este proyecto de clasificación de arte en tiempo real! 🎨
