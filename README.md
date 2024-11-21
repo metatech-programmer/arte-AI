@@ -1,39 +1,53 @@
-Entendido. Para hacer funcionar el programa en su totalidad, necesitarás seguir estos pasos:
+# Clasificación de Arte en Tiempo Real
 
-1. Preparación del entorno:
-   - Asegúrate de tener Python instalado en tu sistema.
-   - Instala las dependencias necesarias utilizando el archivo requirements.txt:
-     
-     pip install -r requirements.txt
-     
+Bienvenido a nuestra aplicación de clasificación de arte en tiempo real. Esta aplicación utiliza técnicas de aprendizaje automático para clasificar imágenes de arte en diferentes categorías.
 
-2. Preprocesamiento de imágenes:
-   - Ejecuta el script src/preprocesamiento.py para organizar y redimensionar las imágenes:
-     
-     python src/preprocesamiento.py
-     
+## Requisitos
+
+* Python 3.x instalado en tu sistema
+* Dependencias necesarias instaladas utilizando el archivo `requirements.txt`
+* Un conjunto de imágenes de arte para entrenar y probar el modelo
+
+## Preparación del entorno
+
+1. Instala las dependencias necesarias utilizando el archivo `requirements.txt`:
+   ```
+   pip install -r requirements.txt
+   ```
+
+2. Asegúrate de tener Python 3.x instalado en tu sistema.
+
+## Preprocesamiento de imágenes
+
+1. Ejecuta el script `src/preprocesamiento.py` para organizar y redimensionar las imágenes:
+   ```
+   python src/preprocesamiento.py
+   ```
+
    Este script organizará tus imágenes en carpetas de entrenamiento y validación, y las redimensionará al tamaño adecuado.
 
-3. Entrenamiento del modelo:
-   - Ejecuta el script src/entrenamiento.py para entrenar el modelo de clasificación:
-     
-     python src/entrenamiento.py
-     
+## Entrenamiento del modelo
+
+1. Ejecuta el script `src/entrenamiento.py` para entrenar el modelo de clasificación:
+   ```
+   python src/entrenamiento.py
+   ```
+
    Este proceso puede llevar tiempo dependiendo de la cantidad de imágenes y la potencia de tu computadora.
 
-4. Clasificación en tiempo real:
-   - Antes de ejecutar la clasificación en tiempo real, necesitas descargar los pesos pre-entrenados de YOLO:
-     - Descarga el archivo yolov3.weights de la página oficial de YOLO y colócalo en el directorio raíz del proyecto.
-   - Asegúrate de tener una cámara web conectada a tu computadora.
-   - Ejecuta el script src/clasificacion_tiempo_real.py:
-     
-     python src/clasificacion_tiempo_real.py
-     
+## Clasificación en tiempo real
 
-Consideraciones adicionales:
+1. Ejecuta el script `src/clasificacion_tiempo_real.py` para clasificar imágenes en tiempo real:
+   ```
+   python src/clasificacion_tiempo_real.py
+   ```
 
-- Asegúrate de que la estructura de directorios sea correcta:
-  
+   Asegúrate de tener una cámara web conectada a tu computadora.
+
+## Consideraciones adicionales
+
+* Asegúrate de que la estructura de directorios sea correcta:
+  ```
   proyecto/
   ├── datos/
   │   ├── imagenes_originales/
@@ -48,16 +62,23 @@ Consideraciones adicionales:
   ├── yolov3.cfg
   ├── yolov3.weights
   └── coco.names
-  
+  ```
 
-- Si encuentras problemas con la detección de objetos, verifica que los archivos yolov3.cfg, yolov3.weights y coco.names estén en el directorio correcto y sean accesibles por el script.
+  * Si encuentras problemas con la detección de objetos, verifica que los archivos `yolov3.cfg`, `yolov3.weights` y `coco.names` estén en el directorio correcto y sean accesibles por el script.
 
-- Es posible que necesites ajustar la línea 19 en src/clasificacion_tiempo_real.py si tu cámara web no es reconocida automáticamente:
-  
-19:19:src/clasificacion_tiempo_real.py
-cap = cv2.VideoCapture(1)
+## Modelo utilizado
 
+El modelo utilizado es un ResNet50 pre-entrenado en ImageNet, con una capa adicional de clasificación para las categorías de arte.
 
-  Prueba cambiando el índice (0, 1, 2, etc.) hasta que funcione con tu cámara.
+## Categorías de arte
 
-Siguiendo estos pasos, deberías poder ejecutar el programa completo, desde el preprocesamiento de las imágenes hasta la clasificación en tiempo real utilizando tu cámara web.
+Las categorías de arte utilizadas en este proyecto son:
++ Pintura
++ Escultura
++ Fotografía
++ Grabado
++ Dibujo
+
+## Ejemplo de uso
+
+Para clasificar una imagen en tiempo real, ejecuta el script `src/clasificacion_tiempo_real.py` y apunta la cámara web a la imagen que deseas clasificar.
