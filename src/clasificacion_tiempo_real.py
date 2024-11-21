@@ -63,28 +63,29 @@ def procesar_frame(frame):
     # Non-Maxima Suppression
     indexes = cv2.dnn.NMSBoxes(boxes, confidences, score_threshold=CONFIDENCE_THRESHOLD, nms_threshold=NMS_THRESHOLD)
 
-    for i in indexes.flatten():
-        x, y, w, h = boxes[i]
-        x, y = max(0, x), max(0, y)  # Evitar coordenadas negativas
-        roi = frame[y:y+h, x:x+w]
+    if len(indexes) > 0:  # Verifica que 'indexes' tenga elementos
+        for i in indexes.flatten() if isinstance(indexes, np.ndarray) else indexes[0]:
+            x, y, w, h = boxes[i]
+            x, y = max(0, x), max(0, y)  # Evitar coordenadas negativas
+            roi = frame[y:y+h, x:x+w]
 
-        # Clasificación con el modelo de arte
-        try:
-            roi_resized = cv2.resize(roi, (224, 224))
-            roi_normalized = roi_resized / 255.0
-            roi_expanded = np.expand_dims(roi_normalized, axis=0)
+            # Clasificación con el modelo de arte
+            try:
+                roi_resized = cv2.resize(roi, (224, 224))
+                roi_normalized = roi_resized / 255.0
+                roi_expanded = np.expand_dims(roi_normalized, axis=0)
 
-            if model:
-                prediccion = model.predict(roi_expanded, verbose=0)
-                clase_predicha = class_names[np.argmax(prediccion)]
-                confianza = np.max(prediccion)
+                if model:
+                    prediccion = model.predict(roi_expanded, verbose=0)
+                    clase_predicha = class_names[np.argmax(prediccion)]
+                    confianza = np.max(prediccion)
 
-                # Dibujar cuadro y texto
-                cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-                cv2.putText(frame, f"{clase_predicha} ({confianza:.2f})", (x, y - 10),
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
-        except Exception as e:
-            print(f"Error procesando ROI: {e}")
+                    # Dibujar cuadro y texto
+                    cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+                    cv2.putText(frame, f"{clase_predicha} ({confianza:.2f})", (x, y - 10),
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
+            except Exception as e:
+                print(f"Error procesando ROI: {e}")
 
     return frame
 
@@ -93,7 +94,7 @@ def main():
     global cap
     threading.Thread(target=cargar_modelo, daemon=True).start()
     print("Presiona 'q' para salir...")
-    
+
     # Inicializar la figura de matplotlib
     plt.ion()
     fig, ax = plt.subplots()
