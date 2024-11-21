@@ -280,7 +280,7 @@ Con esta combinación, el sistema logra una detección y clasificación eficient
 
 ## 📜 **Licencia**
 
-Este proyecto está licenciado bajo la [MIT License](LICENSE).
+Este proyecto está licenciado bajo la [License](LICENSE).
 
 --- 
 
