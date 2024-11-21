@@ -23,9 +23,15 @@ def redimensionar_imagenes(directorio, tamaño=(224, 224)):
         for file in files:
             if file.lower().endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif')):
                 ruta_imagen = os.path.join(root, file)
-                with Image.open(ruta_imagen) as img:
-                    img_redimensionada = img.resize(tamaño, Image.LANCZOS)
-                    img_redimensionada.save(ruta_imagen)
+                try:
+                    with Image.open(ruta_imagen) as img:
+                        img_redimensionada = img.resize(tamaño, Image.LANCZOS)
+                        # Convertir a 'RGB' si el modo es incompatible
+                        if img_redimensionada.mode != 'RGB':
+                            img_redimensionada = img_redimensionada.convert('RGB')
+                        img_redimensionada.save(ruta_imagen)
+                except Exception as e:
+                    print(f"Error procesando la imagen {ruta_imagen}: {e}")
 
 if __name__ == "__main__":
     directorio_origen = "datos/imagenes_originales"
