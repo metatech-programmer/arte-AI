@@ -4,6 +4,7 @@ import numpy as np
 import os
 import threading
 import time
+import matplotlib.pyplot as plt
 
 # Configuración
 CONFIDENCE_THRESHOLD = 0.5
@@ -92,6 +93,11 @@ def main():
     global cap
     threading.Thread(target=cargar_modelo, daemon=True).start()
     print("Presiona 'q' para salir...")
+    
+    # Inicializar la figura de matplotlib
+    plt.ion()
+    fig, ax = plt.subplots()
+
     while cap.isOpened():
         ret, frame = cap.read()
         if not ret:
@@ -104,14 +110,19 @@ def main():
 
         # Mostrar el resultado
         cv2.putText(frame_procesado, f"FPS: {fps:.2f}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 255), 2)
-        cv2.imshow('Clasificador de Arte en Tiempo Real', frame_procesado)
 
-        # Salir con 'q'
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
+        # Mostrar imagen en matplotlib
+        ax.clear()
+        ax.imshow(cv2.cvtColor(frame_procesado, cv2.COLOR_BGR2RGB))
+        ax.set_title('Clasificador de Arte en Tiempo Real')
+        ax.axis('off')  # Desactivar ejes
+        plt.draw()
+        plt.pause(0.001)  # Permite la actualización de la imagen en tiempo real
 
     cap.release()
     cv2.destroyAllWindows()
+    plt.ioff()  # Desactivar el modo interactivo de matplotlib
+    plt.show()
 
 if __name__ == "__main__":
     main()
