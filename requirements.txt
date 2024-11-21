@@ -12,4 +12,4 @@ scikit-learn==1.3.1      # Compatible con Python >=3.8.
 loguru==0.7.1            # Logging mejorado.
 pytest==7.4.2            # Pruebas automatizadas.
 onnxruntime==1.16.0      # Optimización de modelos.
-pycuda==2023.1           # Aceleración con GPU.
+pycuda          # Aceleración con GPU.
