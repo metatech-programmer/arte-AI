@@ -2,6 +2,8 @@
 
 # 🎨 Clasificación de Arte en Tiempo Real con IA
 
+> **Demo en vivo:** [huggingface.co/spaces/MetatechLabs/clasificador-arte](https://huggingface.co/spaces/MetatechLabs/clasificador-arte), el modelo corre en tu navegador con ONNX Runtime Web.
+
 Este proyecto combina técnicas avanzadas de aprendizaje profundo con un sistema en tiempo real para clasificar imágenes de arte en categorías como pintura, escultura, fotografía, grabado y dibujo.
 
 ---

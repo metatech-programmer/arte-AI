@@ -71,9 +71,11 @@ def procesar_frame(frame):
 
             # Clasificación con el modelo de arte
             try:
-                roi_resized = cv2.resize(roi, (224, 224))
-                roi_normalized = roi_resized / 255.0
-                roi_expanded = np.expand_dims(roi_normalized, axis=0)
+                # El modelo se entrenó con imágenes RGB y el preprocesamiento de EfficientNetB0,
+                # que normaliza internamente: la entrada debe ser RGB en rango 0-255, sin dividir por 255.
+                roi_rgb = cv2.cvtColor(roi, cv2.COLOR_BGR2RGB)
+                roi_resized = cv2.resize(roi_rgb, (224, 224)).astype(np.float32)
+                roi_expanded = np.expand_dims(roi_resized, axis=0)
 
                 if model:
                     prediccion = model.predict(roi_expanded, verbose=0)
